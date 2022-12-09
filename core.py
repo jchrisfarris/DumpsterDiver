@@ -56,6 +56,16 @@ def worker(queue, result, settings):
 
 
 def analyze_file(_file, result, settings):
+
+    if not os.path.isfile(_file):
+        print(f"skipping fake file: {_file}")
+        return()
+    if os.path.islink(_file):
+        print(f"skipping symlink {_file}")
+        return()
+
+    print(f"Starting on {_file}")
+
     try:
         bad_expressions = settings.bad_expressions if settings.bad_expressions else BAD_EXPRESSIONS
         if bad_expressions:
@@ -92,6 +102,7 @@ def analyze_file(_file, result, settings):
         for word in get_base64_strings_from_file(_file, min_key, max_key):
             if found_high_entropy(_file, word, result, entropy):
                 entropy_found = True
+                return()  # once we find it once, don't record another example
 
         if settings.secret:
             # have to read line by line instead of words
@@ -313,10 +324,12 @@ def git_object_reader(_file):
 
 
 def save_output(result, settings):
+    print("saving output")
     try:
         data = []
 
         while not result.empty():
+            print(".")
             data.append(result.get())
             
         with open(settings.outfile, 'w') as f:
