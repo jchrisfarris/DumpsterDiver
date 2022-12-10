@@ -89,6 +89,7 @@ def analyze_file(_file, result, settings):
                 if is_base64_with_correct_length(word, min_key, max_key):
                     if found_high_entropy(_file, word, result, entropy):
                         entropy_found = True
+                        return()  # once we find it once, don't record another example
 
             if additional_checks.final(_file):
                 data = {"Finding": "Advanced rule triggerred", "File": _file,
@@ -329,9 +330,10 @@ def save_output(result, settings):
         data = []
 
         while not result.empty():
-            print(".")
+            print(".", end ="")
             data.append(result.get())
             
+        print("done")
         with open(settings.outfile, 'w') as f:
             json.dump(data, f)
 
