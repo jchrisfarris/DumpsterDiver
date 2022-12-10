@@ -254,6 +254,7 @@ def remove_file(_file):
 
 
 def extract_archive(archive_file, path):
+    print(f"Extracing Archive {archive_file}")
     try:
         if archive_file.endswith('.zip'):
             opener, mode = zipfile.ZipFile, 'r'
