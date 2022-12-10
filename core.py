@@ -330,10 +330,8 @@ def save_output(result, settings):
         data = []
 
         while not result.empty():
-            print(".", end ="")
             data.append(result.get())
             
-        print("done")
         with open(settings.outfile, 'w') as f:
             json.dump(data, f)
 
